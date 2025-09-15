@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: bankapp
+  profiles:
+    active: homol
+
+server:
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+
+

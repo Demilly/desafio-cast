@@ -1,12 +1,12 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '2.7.18' // última versão compatível com Java 8
+	id 'org.springframework.boot' version '2.7.18'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
 group = 'br.com'
-version = '0.0.1-SNAPSHOT'
-description = 'desafio 1'
+version = 'bankapp'
+description = 'Desafio 1 Cast'
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_1_8

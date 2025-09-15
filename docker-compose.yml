@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  bankapp:
+    image: bankapp:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bankapp_homol
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: homol
+    depends_on:
+      - homol_db
+    networks:
+      - bankapp_network
+
+  homol_db:
+    image: mysql:8.1
+    container_name: bankapp_homol_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_DATABASE: banco_desafio
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ""
+    ports:
+      - "3306:3306"
+    volumes:
+      - homol_db_data:/var/lib/mysql
+    networks:
+      - bankapp_network
+
+volumes:
+  homol_db_data:
+
+networks:
+  bankapp_network:
+    driver: bridge
