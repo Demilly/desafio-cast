@@ -1,7 +1,6 @@
-package br.com.integration;
+package br.com.integration.controller;
 
 import br.com.application.service.AccountService;
-import br.com.domain.Account;
 import br.com.domain.dto.AccountCreateDto;
 import br.com.domain.dto.AccountDto;
 import br.com.integration.config.AbstractIntegrationTest;

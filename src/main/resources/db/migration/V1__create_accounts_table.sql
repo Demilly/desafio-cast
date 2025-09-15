@@ -1,6 +1,7 @@
-CREATE TABLE accounts (
+CREATE TABLE account (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    number VARCHAR(50) NOT NULL UNIQUE,
-    balance DOUBLE NOT NULL,
+    number BIGINT NOT NULL UNIQUE,
+    balance DECIMAL(19,2) NOT NULL,
+    owner_name VARCHAR(255),
     version BIGINT
 );

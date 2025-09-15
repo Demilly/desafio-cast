@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 @Entity
-@Table(name = "accounts")
+@Table(name = "account")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Account {

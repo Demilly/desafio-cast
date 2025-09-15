@@ -3,15 +3,29 @@ package br.com.domain.mapper;
 import br.com.domain.Account;
 import br.com.domain.dto.AccountCreateDto;
 import br.com.domain.dto.AccountDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface AccountMapper {
+@Component
+public class AccountMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "version", ignore = true)
-    Account toAccount(AccountCreateDto accountCreateDto);
+    public Account toAccount(AccountCreateDto dto) {
+        if (dto == null) return null;
 
-    AccountDto toAccountDto(Account account);
+        return new Account(
+                dto.getNumber(),
+                dto.getOwnerName(),
+                dto.getBalance()
+        );
+    }
+
+    public AccountDto toAccountDto(Account account) {
+        if (account == null) return null;
+
+        AccountDto dto = new AccountDto();
+        dto.setNumber(account.getNumber());
+        dto.setOwnerName(account.getOwnerName());
+        dto.setBalance(account.getBalance());
+        return dto;
+    }
+
 }

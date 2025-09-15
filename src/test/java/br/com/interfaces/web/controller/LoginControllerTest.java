@@ -30,11 +30,11 @@ class LoginControllerTest {
 
     @Test
     void loginPageShouldReturnLoginViewWithCustomRoleAndError() {
-        String view = controller.loginPage("ADMIN", "Usuário ou senha inválidos", model);
+        String view = controller.loginPage("ADMIN", "Login de administrador inválido", model);
 
         assertEquals("login/login", view);
         assertEquals(RoleEnum.ADMIN.name(), model.getAttribute("role"));
-        assertEquals("Usuário ou senha inválidos", model.getAttribute("error"));
+        assertEquals("Login de administrador inválido", model.getAttribute("error"));
     }
 
     @Test

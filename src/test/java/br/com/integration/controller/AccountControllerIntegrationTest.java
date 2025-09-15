@@ -1,4 +1,4 @@
-package br.com.integration;
+package br.com.integration.controller;
 
 import br.com.application.service.AccountService;
 import br.com.domain.dto.TransactionDto;
@@ -9,6 +9,7 @@ import br.com.integration.config.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 
 import static java.lang.String.valueOf;
 import static org.mockito.ArgumentMatchers.any;
