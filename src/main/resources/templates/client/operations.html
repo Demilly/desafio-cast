@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>BankApp - Operações de Conta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 40px 20px;
+            color: #333;
+        }
+        .container-cards {
+            max-width: 1000px;
+            margin: auto;
+        }
+        .card-op {
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 25px;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card-op:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        h2 {
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #4a4a4a;
+        }
+        .btn-op {
+            border-radius: 50px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        input, select {
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            color: #333;
+        }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .btn-logout {
+            border-radius: 50px;
+            font-weight: bold;
+        }
+        .alert {
+            border-radius: 10px;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            height: 200px;
+            overflow: auto;
+            color: #333;
+        }
+        /* Highlight input errors */
+        input.is-invalid {
+            border-color: #dc3545;
+        }
+        .card-history {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container container-cards">
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <h3>BankApp</h3>
+        <form th:action="@{/logout}" method="post" style="margin:0">
+            <button type="submit" class="btn btn-outline-secondary btn-logout">
+                <i class="bi bi-box-arrow-right"></i> Sair
+            </button>
+        </form>
+    </div>
+
+    <h2>Realize operações na sua conta</h2>
+
+    <!-- Mensagens -->
+    <div th:if="${message}" class="mb-3">
+        <div class="alert alert-success" th:text="${message}"></div>
+    </div>
+    <div th:if="${error}" class="mb-3">
+        <div class="alert alert-danger" th:text="${error}"></div>
+    </div>
+
+    <!-- Cards em grid -->
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+
+        <!-- Crédito -->
+        <div class="col">
+            <div class="card-op">
+                <div class="section-title">Crédito</div>
+                <form th:action="@{/client/credit}" th:object="${transactionDto}" method="post">
+                    <input th:field="*{accountNumber}" placeholder="Número da conta" required pattern="\d+"
+                           title="Apenas números"/>
+                    <input th:field="*{amount}" type="number" step="0.01" placeholder="Valor" required min="0.01"/>
+                    <button type="submit" class="btn btn-primary btn-op w-100">Creditar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Débito -->
+        <div class="col">
+            <div class="card-op">
+                <div class="section-title">Débito</div>
+                <form th:action="@{/client/debit}" th:object="${transactionDto}" method="post">
+                    <input th:field="*{accountNumber}" placeholder="Número da conta" required pattern="\d+"
+                           title="Apenas números"/>
+                    <input th:field="*{amount}" type="number" step="0.01" placeholder="Valor" required min="0.01"/>
+                    <button type="submit" class="btn btn-danger btn-op w-100">Debitar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Transferência -->
+        <div class="col">
+            <div class="card-op">
+                <div class="section-title">Transferência</div>
+                <form th:action="@{/client/transfer}" th:object="${transferDto}" method="post">
+                    <input th:field="*{fromAccount}" placeholder="Conta de origem" required pattern="\d+"
+                           title="Apenas números"/>
+                    <input th:field="*{toAccount}" placeholder="Conta destino" required pattern="\d+"
+                           title="Apenas números"/>
+                    <input type="number" step="0.01" th:field="*{amount}" placeholder="Valor" required min="0.01"/>
+                    <div class="mt-2">
+                        <input type="radio" name="strategy" value="optimistic" checked/> Otimista
+                        <input type="radio" name="strategy" value="pessimistic"/> Pessimista
+                    </div>
+                    <button type="submit" class="btn btn-success btn-op w-100 mt-2">Transferir</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Teste de Concorrência -->
+        <div class="col-12">
+            <div class="card-op">
+                <div class="section-title">Teste de Concorrência (AJAX)</div>
+                <div class="row g-2 mb-2">
+                    <div class="col-md-3"><input id="c_from" placeholder="De (Conta)" class="form-control" pattern="\d+"
+                                                 title="Apenas números"/></div>
+                    <div class="col-md-3"><input id="c_to" placeholder="Para (Conta)" class="form-control" pattern="\d+"
+                                                 title="Apenas números"/></div>
+                    <div class="col-md-3"><input id="c_amount" type="number" step="0.01" placeholder="Valor"
+                                                 class="form-control" min="0.01"/></div>
+                    <div class="col-md-3"><input id="c_count" type="number" min="1" value="10"
+                                                 placeholder="Qtd requisições" class="form-control"/></div>
+                </div>
+                <div class="row g-2 mb-2">
+                    <div class="col-md-6">
+                        <select id="c_strategy" class="form-select">
+                            <option value="optimistic">Otimista</option>
+                            <option value="pessimistic">Pessimista</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <button id="btnRun" class="btn btn-warning btn-op w-100">Rodar teste</button>
+                    </div>
+                </div>
+                <div class="card card-history mt-2 p-2">
+                    <pre id="c_result"></pre>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<meta name="_csrf" th:content="${_csrf?.token}"/>
+<meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('btnRun').addEventListener('click', function () {
+        const from = document.getElementById('c_from').value;
+        const to = document.getElementById('c_to').value;
+        const amount = parseFloat(document.getElementById('c_amount').value);
+        const count = parseInt(document.getElementById('c_count').value) || 1;
+        const strategy = document.getElementById('c_strategy').value;
+
+        const resultBox = document.getElementById('c_result');
+        resultBox.textContent = 'Iniciando teste...\n';
+
+        const body = { fromAccount: from, toAccount: to, amount: amount };
+        let completed = 0;
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        for (let i = 0; i < count; i++) {
+            fetch('/api/test/concurrency/transfer?strategy=' + encodeURIComponent(strategy), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken  // adiciona o CSRF dinamicamente
+                },
+                body: JSON.stringify(body)
+            })
+            .then(async resp => {
+                completed++;
+                let text = await resp.text();
+                try {
+                    const json = JSON.parse(text);
+                    resultBox.textContent += `[${completed}] STATUS: ${resp.status}, RESPONSE: ${JSON.stringify(json)}\n`;
+                } catch (e) {
+                    resultBox.textContent += `[${completed}] STATUS: ${resp.status}, RESPONSE (não JSON): ${text}\n`;
+                }
+            })
+            .catch(err => {
+                completed++;
+                resultBox.textContent += `[${completed}] ERROR: ${err}\n`;
+            });
+        }
+    });
+</script>
+
+
+</body>
+</html>

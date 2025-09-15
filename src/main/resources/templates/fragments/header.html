@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="navbar">
+    <nav>
+        <a th:href="@{/index}">Home</a> |
+        <a th:href="@{/admin/accounts}">Admin</a> |
+        <a th:href="@{/account/operations}">Operações</a>
+    </nav>
+    <hr/>
+</div>
+</body>
+</html>
