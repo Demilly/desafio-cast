@@ -20,6 +20,22 @@ A aplicação é:
 - **Configuração por perfil:** suporte a ambientes **local**, **homol** e **prod**, cada um com banco e configurações diferentes.
 - **Docker-friendly:** pode ser executada via Docker sem precisar instalar Java ou banco local.
 
+## 📦 Dependências Principais
+
+O projeto utiliza as seguintes dependências:
+
+- **Spring Boot 2.7.18** → Framework principal para desenvolvimento rápido de aplicações Java.
+- **Spring Data JPA** → Abstração para persistência de dados com Hibernate.
+- **Hibernate** → ORM para mapeamento objeto-relacional.
+- **Spring Security** → Autenticação e autorização de usuários.
+- **Thymeleaf 3.1** → Motor de templates para renderização das páginas HTML.
+- **Bootstrap 5.3** → Estilização responsiva do front-end.
+- **H2 Database** → Banco de dados em memória usado em ambiente local/testes.
+- **MySQL Driver** → Conector JDBC para banco de dados MySQL.
+- **Lombok** → Reduz boilerplate de código (getters, setters, builders, etc).
+- **JUnit 5** → Framework de testes unitários.
+- **Mockito** → Framework de mock para testes.
+
 ---
 
 ## 🔑 Login
